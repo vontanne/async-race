@@ -41,6 +41,10 @@ export default tseslint.config(
       '@angular-eslint/use-lifecycle-interface': 'error',
       '@angular-eslint/use-pipe-transform-interface': 'error',
 
+      // ── typescript-eslint overrides for Angular patterns ─────────────────
+      '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+
       // ── Airbnb-aligned rules ──────────────────────────────────────────────
       'no-magic-numbers': ['warn', {
         ignore: [0, 1, -1],
@@ -55,7 +59,7 @@ export default tseslint.config(
       'no-var': 'error',
       'prefer-const': 'error',
       'arrow-body-style': ['error', 'as-needed'],
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['error', 'warn'] }],
       eqeqeq: ['error', 'always'],
       'no-duplicate-imports': 'error',
     },
