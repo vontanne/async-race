@@ -1,0 +1,70 @@
+.garage {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.garage__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.garage__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.garage__form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.garage__input {
+  flex: 1;
+  min-width: 10rem;
+  padding: 0.375rem 0.625rem;
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.garage__input:focus {
+  border-color: var(--color-accent);
+}
+
+.garage__color {
+  width: 2.5rem;
+  height: 2rem;
+  padding: 0.125rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.garage__race-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.garage__cars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.garage__empty {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  padding: 2rem 0;
+  text-align: center;
+}

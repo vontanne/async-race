@@ -1,0 +1,81 @@
+<section class="garage">
+  <h1 class="garage__title">Garage ({{ totalCars() }})</h1>
+
+  <div class="garage__panel">
+    <div class="garage__form">
+      <input
+        class="garage__input"
+        type="text"
+        placeholder="Car name"
+        [value]="state.createName()"
+        (input)="onCreateNameInput($event)"
+        maxlength="50"
+      />
+      <input
+        class="garage__color"
+        type="color"
+        [value]="state.createColor()"
+        (input)="onCreateColorInput($event)"
+      />
+      <button class="btn btn--primary" [disabled]="!isCreateValid()" (click)="onCreateCarClick()">
+        Add
+      </button>
+    </div>
+
+    @if (state.editCar()) {
+      <div class="garage__form">
+        <input
+          class="garage__input"
+          type="text"
+          placeholder="Car name"
+          [value]="state.editName()"
+          (input)="onEditNameInput($event)"
+          maxlength="50"
+        />
+        <input
+          class="garage__color"
+          type="color"
+          [value]="state.editColor()"
+          (input)="onEditColorInput($event)"
+        />
+        <button class="btn btn--primary" [disabled]="!isEditValid()" (click)="onUpdateCarClick()">
+          Update
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="garage__race-controls">
+    <button class="btn btn--primary" [disabled]="isRacing()" (click)="onStartRaceClick()">
+      Race
+    </button>
+    <button class="btn" [disabled]="!isRacing()" (click)="onResetRace()">
+      Reset
+    </button>
+    <button class="btn" (click)="onGenerateClick()">Generate cars</button>
+  </div>
+
+  @if (cars().length === 0) {
+    <p class="garage__empty">No cars in garage yet.</p>
+  } @else {
+    <div class="garage__cars">
+      @for (car of cars(); track car.id) {
+        <app-car-card [car]="car" (edit)="onEditCar($event)" (remove)="onDeleteCarClick($event)" />
+      }
+    </div>
+
+    <app-pagination
+      [currentPage]="state.page()"
+      [totalPages]="totalPages()"
+      (pageChange)="onPageChange($event)"
+    />
+  }
+</section>
+
+@if (winnerData(); as winner) {
+  <app-winner-banner
+    [winnerName]="winnerCarName()"
+    [winTime]="winner.time"
+    (dismiss)="winnerData.set(null)"
+  />
+}
