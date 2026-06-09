@@ -13,8 +13,9 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 
 import { CarService } from '../../core/services/car.service';
 import { WinnerService } from '../../core/services/winner.service';
+import { RaceStateService } from '../../core/services/race-state.service';
 import { GarageStateService } from './garage-state.service';
-import { CarCardComponent, type RaceResult } from './car-card/car-card.component';
+import { CarCardComponent } from './car-card/car-card.component';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { WinnerBannerComponent } from '../../shared/winner-banner/winner-banner.component';
 import { CAR_NAME_PARTS, RANDOM_CARS_COUNT } from '../../core/constants/car-names.constants';
@@ -24,7 +25,6 @@ import type { Car, CarCreate } from '../../core/models/car.model';
 const MAX_HEX_COLOR = 0xffffff;
 const HEX_COLOR_LENGTH = 6;
 const HEX_RADIX = 16;
-const DECIMAL_PLACES = 2;
 const MAX_NAME_LENGTH = 50;
 
 function generateRandomColor(): string {
@@ -43,25 +43,17 @@ export class GarageComponent implements OnInit {
   private readonly carService = inject(CarService);
   private readonly winnerService = inject(WinnerService);
   readonly state = inject(GarageStateService);
+  readonly race = inject(RaceStateService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly cars = signal<Car[]>([]);
   readonly totalCars = signal<number>(0);
-  readonly isRacing = signal<boolean>(false);
-  readonly hasFinishedRace = signal<boolean>(false);
   readonly isGenerating = signal<boolean>(false);
-  readonly winnerData = signal<RaceResult | null>(null);
   readonly carCards = viewChildren(CarCardComponent);
 
   readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.totalCars() / GARAGE_PAGE_LIMIT)),
   );
-
-  readonly winnerCarName = computed(() => {
-    const data = this.winnerData();
-    if (!data) return '';
-    return this.cars().find((c) => c.id === data.carId)?.name ?? '';
-  });
 
   readonly isCreateValid = computed(() => {
     const len = this.state.createName().trim().length;
@@ -102,18 +94,17 @@ export class GarageComponent implements OnInit {
   }
 
   onStartRaceClick(): void {
-    void this.startRace().catch((err: unknown) => {
+    void this.race.start(this.carCards()).catch((err: unknown) => {
       console.error(err);
     });
   }
 
   onResetRace(): void {
-    this.carCards().forEach((card) => {
-      card.resetPosition();
-    });
-    this.isRacing.set(false);
-    this.hasFinishedRace.set(false);
-    this.winnerData.set(null);
+    this.race.reset(this.carCards());
+  }
+
+  onDismissWinner(): void {
+    this.race.dismissWinner();
   }
 
   onEditCar(car: Car): void {
@@ -204,39 +195,6 @@ export class GarageComponent implements OnInit {
       await this.loadCars();
     } finally {
       this.isGenerating.set(false);
-    }
-  }
-
-  private async startRace(): Promise<void> {
-    const cards = [...this.carCards()];
-    if (cards.length === 0) return;
-    this.isRacing.set(true);
-    this.hasFinishedRace.set(false);
-    this.winnerData.set(null);
-    try {
-      const winner = await Promise.any(cards.map((c) => c.startRace()));
-      await this.saveWinner(winner);
-      this.winnerData.set(winner);
-    } catch {
-      // AggregateError — all engines broke, no winner this race
-    } finally {
-      this.isRacing.set(false);
-      this.hasFinishedRace.set(true);
-    }
-  }
-
-  private async saveWinner(result: RaceResult): Promise<void> {
-    const time = parseFloat(result.time.toFixed(DECIMAL_PLACES));
-    const existing = await firstValueFrom(this.winnerService.findWinner(result.carId));
-    if (existing) {
-      await firstValueFrom(
-        this.winnerService.updateWinner(result.carId, {
-          wins: existing.wins + 1,
-          time: Math.min(existing.time, time),
-        }),
-      );
-    } else {
-      await firstValueFrom(this.winnerService.createWinner({ id: result.carId, wins: 1, time }));
     }
   }
 

@@ -18,11 +18,7 @@ import { EngineService } from '../../../core/services/engine.service';
 import { CarIconComponent } from '../../../shared/car-icon/car-icon.component';
 import type { Car } from '../../../core/models/car.model';
 import type { CarEngineState } from '../../../core/models/engine.model';
-
-export interface RaceResult {
-  carId: number;
-  time: number; // seconds
-}
+import type { Raceable, RaceResult } from '../../../core/models/race.model';
 
 const MS_PER_SECOND = 1000;
 
@@ -33,7 +29,7 @@ const MS_PER_SECOND = 1000;
   styleUrl: './car-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarCardComponent {
+export class CarCardComponent implements Raceable {
   private readonly engineService = inject(EngineService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly zone = inject(NgZone);
@@ -121,7 +117,11 @@ export class CarCardComponent {
       this.engineState.set('broken');
       throw new Error(`Car ${this.car().id} engine broke`);
     }
-    return { carId: this.car().id, time: this.raceDuration / MS_PER_SECOND };
+    return {
+      carId: this.car().id,
+      carName: this.car().name,
+      time: this.raceDuration / MS_PER_SECOND,
+    };
   }
 
   private beginAnimation(): void {
