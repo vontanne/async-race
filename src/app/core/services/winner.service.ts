@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { API_BASE_URL, WINNERS_PAGE_LIMIT } from '../constants/api.constants';
 import type {
@@ -28,6 +28,13 @@ export class WinnerService {
 
   getWinner(id: number): Observable<Winner> {
     return this.http.get<Winner>(`${this.winnersUrl}/${id}`);
+  }
+
+  findWinner(id: number): Observable<Winner | null> {
+    const params = new HttpParams().set('id', id);
+    return this.http
+      .get<Winner[]>(this.winnersUrl, { params })
+      .pipe(map((list) => list[0] ?? null));
   }
 
   createWinner(winner: WinnerCreate): Observable<Winner> {

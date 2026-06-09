@@ -1,10 +1,15 @@
 <div class="car-card">
   <div class="car-card__header">
     <div class="car-card__actions">
-      <button class="btn btn--sm" [disabled]="!canStart()" (click)="edit.emit(car())">
+      <button type="button" class="btn btn--sm" [disabled]="!canStart()" (click)="edit.emit(car())">
         Select
       </button>
-      <button class="btn btn--sm btn--danger" [disabled]="!canStart()" (click)="remove.emit(car().id)">
+      <button
+        type="button"
+        class="btn btn--sm btn--danger"
+        [disabled]="!canStart()"
+        (click)="remove.emit(car().id)"
+      >
         Delete
       </button>
     </div>
@@ -14,31 +19,30 @@
   <div class="car-card__race-row">
     <div class="car-card__engine-btns">
       <button
+        type="button"
         class="btn btn--engine"
         [disabled]="!canStart()"
         (click)="onStartEngine()"
+        aria-label="Start engine"
         title="Start engine"
       >
-        A
+        ▶
       </button>
       <button
+        type="button"
         class="btn btn--engine"
         [disabled]="!canStop()"
         (click)="onStopEngine()"
+        aria-label="Stop engine"
         title="Stop engine"
       >
-        B
+        ■
       </button>
     </div>
 
-    <div class="car-card__track" [style.--pos]="position()">
+    <div #track class="car-card__track">
       <div class="car-card__car">
-        <svg viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg" class="car-card__svg" aria-hidden="true">
-          <rect x="2" y="11" width="56" height="9" rx="3" [attr.fill]="car().color" />
-          <rect x="10" y="5" width="30" height="10" rx="2" [attr.fill]="car().color" />
-          <circle cx="12" cy="22" r="3.5" fill="#222" />
-          <circle cx="48" cy="22" r="3.5" fill="#222" />
-        </svg>
+        <app-car-icon [color]="car().color" />
       </div>
       <div class="car-card__finish" aria-hidden="true"></div>
     </div>

@@ -12,4 +12,5 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/winners/winners.component').then((m) => m.WinnersComponent),
   },
+  { path: '**', redirectTo: 'garage' },
 ];

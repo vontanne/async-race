@@ -1,0 +1,17 @@
+@if (service.notifications().length > 0) {
+  <div class="notifications" role="status" aria-live="polite">
+    @for (n of service.notifications(); track n.id) {
+      <div class="notifications__item" [class.notifications__item--error]="n.kind === 'error'">
+        <span class="notifications__msg">{{ n.message }}</span>
+        <button
+          type="button"
+          class="notifications__close"
+          aria-label="Dismiss"
+          (click)="service.dismiss(n.id)"
+        >
+          ✕
+        </button>
+      </div>
+    }
+  </div>
+}

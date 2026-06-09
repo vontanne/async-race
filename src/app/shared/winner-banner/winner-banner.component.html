@@ -3,6 +3,6 @@
     <p class="banner__headline">Winner!</p>
     <p class="banner__name">{{ winnerName() }}</p>
     <p class="banner__time">Time: {{ winTime() }}s</p>
-    <button class="banner__btn" (click)="dismiss.emit()">OK</button>
+    <button type="button" class="btn btn--primary banner__btn" (click)="dismiss.emit()">OK</button>
   </div>
 </div>

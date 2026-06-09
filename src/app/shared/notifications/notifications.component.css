@@ -1,0 +1,51 @@
+.notifications {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 200;
+  max-width: 22rem;
+}
+
+.notifications__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.notifications__item--error {
+  border-color: var(--color-accent);
+}
+
+.notifications__msg {
+  flex: 1;
+}
+
+.notifications__close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+}
+
+.notifications__close:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 500px) {
+  .notifications {
+    left: 0.5rem;
+    right: 0.5rem;
+    max-width: none;
+  }
+}

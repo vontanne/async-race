@@ -1,0 +1,10 @@
+:host {
+  display: inline-block;
+  line-height: 0;
+}
+
+.car-icon {
+  display: block;
+  width: 100%;
+  height: auto;
+}

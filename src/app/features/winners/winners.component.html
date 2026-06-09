@@ -2,31 +2,53 @@
   <h1 class="winners__title">Winners ({{ totalWinners() }})</h1>
 
   @if (winners().length === 0) {
-    <p class="winners__empty">No winners yet. Run a race in the Garage!</p>
+    <p class="winners__empty">
+      @if (isLoading()) {
+        Loading…
+      } @else {
+        No winners yet. Run a race in the Garage!
+      }
+    </p>
   } @else {
     <div class="winners__table-wrap">
       <table class="winners__table">
         <thead>
           <tr class="winners__row winners__row--head">
-            <th class="winners__th">#</th>
-            <th class="winners__th">Car</th>
-            <th class="winners__th">Name</th>
+            <th class="winners__th" scope="col">#</th>
+            <th class="winners__th" scope="col">Car</th>
+            <th class="winners__th" scope="col">Name</th>
             <th
               class="winners__th winners__th--sortable"
+              scope="col"
+              role="button"
+              tabindex="0"
+              [attr.aria-sort]="ariaSort('wins')"
               (click)="onSortChange('wins')"
+              (keydown.enter)="onSortChange('wins')"
+              (keydown.space)="onSortChange('wins'); $event.preventDefault()"
             >
               Wins
               @if (state.sort() === 'wins') {
-                <span class="winners__sort-icon">{{ state.order() === 'ASC' ? '▲' : '▼' }}</span>
+                <span class="winners__sort-icon" aria-hidden="true">
+                  {{ state.order() === 'ASC' ? '▲' : '▼' }}
+                </span>
               }
             </th>
             <th
               class="winners__th winners__th--sortable"
+              scope="col"
+              role="button"
+              tabindex="0"
+              [attr.aria-sort]="ariaSort('time')"
               (click)="onSortChange('time')"
+              (keydown.enter)="onSortChange('time')"
+              (keydown.space)="onSortChange('time'); $event.preventDefault()"
             >
               Best time (s)
               @if (state.sort() === 'time') {
-                <span class="winners__sort-icon">{{ state.order() === 'ASC' ? '▲' : '▼' }}</span>
+                <span class="winners__sort-icon" aria-hidden="true">
+                  {{ state.order() === 'ASC' ? '▲' : '▼' }}
+                </span>
               }
             </th>
           </tr>
@@ -36,17 +58,7 @@
             <tr class="winners__row">
               <td class="winners__td">{{ getRowNumber($index) }}</td>
               <td class="winners__td">
-                <svg
-                  viewBox="0 0 60 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="winners__car-icon"
-                  aria-hidden="true"
-                >
-                  <rect x="2" y="11" width="56" height="9" rx="3" [attr.fill]="winner.car.color" />
-                  <rect x="10" y="5" width="30" height="10" rx="2" [attr.fill]="winner.car.color" />
-                  <circle cx="12" cy="22" r="3.5" fill="#222" />
-                  <circle cx="48" cy="22" r="3.5" fill="#222" />
-                </svg>
+                <app-car-icon class="winners__car-icon" [color]="winner.car.color" />
               </td>
               <td class="winners__td">{{ winner.car.name }}</td>
               <td class="winners__td">{{ winner.wins }}</td>

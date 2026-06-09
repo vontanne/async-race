@@ -48,6 +48,8 @@ export class GarageComponent implements OnInit {
   readonly cars = signal<Car[]>([]);
   readonly totalCars = signal<number>(0);
   readonly isRacing = signal<boolean>(false);
+  readonly hasFinishedRace = signal<boolean>(false);
+  readonly isGenerating = signal<boolean>(false);
   readonly winnerData = signal<RaceResult | null>(null);
   readonly carCards = viewChildren(CarCardComponent);
 
@@ -110,6 +112,7 @@ export class GarageComponent implements OnInit {
       card.resetPosition();
     });
     this.isRacing.set(false);
+    this.hasFinishedRace.set(false);
     this.winnerData.set(null);
   }
 
@@ -117,6 +120,10 @@ export class GarageComponent implements OnInit {
     this.state.editCar.set(car);
     this.state.editName.set(car.name);
     this.state.editColor.set(car.color);
+  }
+
+  onCancelEdit(): void {
+    this.state.editCar.set(null);
   }
 
   onPageChange(page: number): void {
@@ -172,9 +179,6 @@ export class GarageComponent implements OnInit {
   }
 
   private async deleteCar(id: number): Promise<void> {
-    if (this.cars().length === 1 && this.state.page() > 1) {
-      this.state.page.update((p) => p - 1);
-    }
     await firstValueFrom(this.carService.deleteCar(id).pipe(takeUntilDestroyed(this.destroyRef)));
     await firstValueFrom(
       this.winnerService.deleteWinner(id).pipe(
@@ -182,23 +186,32 @@ export class GarageComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       ),
     );
+    if (this.cars().length === 1 && this.state.page() > 1) {
+      this.state.page.update((p) => p - 1);
+    }
     if (this.state.editCar()?.id === id) this.state.editCar.set(null);
     await this.loadCars();
   }
 
   private async generateRandomCars(): Promise<void> {
-    await Promise.all(
-      Array.from({ length: RANDOM_CARS_COUNT }, () =>
-        firstValueFrom(this.carService.createCar(this.buildRandomCar())),
-      ),
-    );
-    await this.loadCars();
+    this.isGenerating.set(true);
+    try {
+      await Promise.all(
+        Array.from({ length: RANDOM_CARS_COUNT }, () =>
+          firstValueFrom(this.carService.createCar(this.buildRandomCar())),
+        ),
+      );
+      await this.loadCars();
+    } finally {
+      this.isGenerating.set(false);
+    }
   }
 
   private async startRace(): Promise<void> {
     const cards = [...this.carCards()];
     if (cards.length === 0) return;
     this.isRacing.set(true);
+    this.hasFinishedRace.set(false);
     this.winnerData.set(null);
     try {
       const winner = await Promise.any(cards.map((c) => c.startRace()));
@@ -206,20 +219,23 @@ export class GarageComponent implements OnInit {
       this.winnerData.set(winner);
     } catch {
       // AggregateError — all engines broke, no winner this race
+    } finally {
+      this.isRacing.set(false);
+      this.hasFinishedRace.set(true);
     }
   }
 
   private async saveWinner(result: RaceResult): Promise<void> {
     const time = parseFloat(result.time.toFixed(DECIMAL_PLACES));
-    try {
-      const existing = await firstValueFrom(this.winnerService.getWinner(result.carId));
+    const existing = await firstValueFrom(this.winnerService.findWinner(result.carId));
+    if (existing) {
       await firstValueFrom(
         this.winnerService.updateWinner(result.carId, {
           wins: existing.wins + 1,
           time: Math.min(existing.time, time),
         }),
       );
-    } catch {
+    } else {
       await firstValueFrom(this.winnerService.createWinner({ id: result.carId, wins: 1, time }));
     }
   }

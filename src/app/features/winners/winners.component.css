@@ -48,6 +48,12 @@
   color: var(--color-text);
 }
 
+.winners__th--sortable:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+  color: var(--color-text);
+}
+
 .winners__row--head {
   background: var(--color-surface);
 }
@@ -62,7 +68,18 @@
 }
 
 .winners__car-icon {
-  display: block;
+  display: inline-block;
   width: 3rem;
-  height: 1.25rem;
+  vertical-align: middle;
+}
+
+@media (max-width: 500px) {
+  .winners__title {
+    font-size: 1.25rem;
+  }
+  .winners__th,
+  .winners__td {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.8125rem;
+  }
 }

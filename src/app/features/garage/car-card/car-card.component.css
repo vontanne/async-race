@@ -44,6 +44,7 @@
 }
 
 .car-card__track {
+  --car-width: 3.75rem;
   position: relative;
   flex: 1;
   height: 100%;
@@ -56,16 +57,11 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: calc(var(--pos, 0) * (100% - 3.75rem));
+  left: calc(var(--pos) * (100% - var(--car-width)));
   display: flex;
   align-items: center;
+  width: var(--car-width);
   will-change: left;
-}
-
-.car-card__svg {
-  width: 3.75rem;
-  height: auto;
-  display: block;
 }
 
 .car-card__finish {
@@ -74,7 +70,17 @@
   top: 0;
   bottom: 0;
   width: 0.875rem;
-  background:
-    repeating-conic-gradient(#e0e0e0 0% 25%, #333 0% 50%)
-    0 0 / 0.4375rem 0.4375rem;
+  background: repeating-conic-gradient(#e0e0e0 0% 25%, #333 0% 50%) 0 0 / 0.4375rem 0.4375rem;
+}
+
+@media (max-width: 500px) {
+  .car-card {
+    padding: 0.5rem;
+  }
+  .car-card__race-row {
+    height: 2.25rem;
+  }
+  .car-card__track {
+    --car-width: 3rem;
+  }
 }

@@ -8,6 +8,18 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+@media (max-width: 500px) {
+  .header {
+    padding: 0 0.75rem;
+  }
+  .header__title {
+    font-size: 1rem;
+  }
+  .header__nav {
+    gap: 1rem;
+  }
+}
+
 .header__title {
   font-size: 1.25rem;
   font-weight: 700;
@@ -30,7 +42,9 @@
   letter-spacing: 0.08em;
   padding-bottom: 0.125rem;
   border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 
 .header__link:hover {

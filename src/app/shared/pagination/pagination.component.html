@@ -1,17 +1,23 @@
-<div class="pagination">
+<nav class="pagination" aria-label="Pagination">
   <button
+    type="button"
     class="pagination__btn"
     [disabled]="currentPage() <= 1"
     (click)="prev()"
+    aria-label="Previous page"
   >
     Prev
   </button>
-  <span class="pagination__info">Page {{ currentPage() }} / {{ totalPages() }}</span>
+  <span class="pagination__info" aria-live="polite">
+    Page {{ currentPage() }} / {{ totalPages() }}
+  </span>
   <button
+    type="button"
     class="pagination__btn"
     [disabled]="currentPage() >= totalPages()"
     (click)="next()"
+    aria-label="Next page"
   >
     Next
   </button>
-</div>
+</nav>

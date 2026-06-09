@@ -68,3 +68,18 @@
   padding: 2rem 0;
   text-align: center;
 }
+
+.garage__editing-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  flex-basis: 100%;
+}
+
+@media (max-width: 500px) {
+  .garage__input {
+    min-width: 0;
+  }
+  .garage__title {
+    font-size: 1.25rem;
+  }
+}
