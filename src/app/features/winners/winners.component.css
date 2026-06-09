@@ -1,0 +1,68 @@
+.winners {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.winners__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.winners__empty {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.winners__table-wrap {
+  overflow-x: auto;
+}
+
+.winners__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.winners__th,
+.winners__td {
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.winners__th {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.winners__th--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.winners__th--sortable:hover {
+  color: var(--color-text);
+}
+
+.winners__row--head {
+  background: var(--color-surface);
+}
+
+.winners__row:hover {
+  background: var(--color-surface-2);
+}
+
+.winners__sort-icon {
+  margin-left: 0.25rem;
+  color: var(--color-accent);
+}
+
+.winners__car-icon {
+  display: block;
+  width: 3rem;
+  height: 1.25rem;
+}
