@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --watch=false",
+    "test:watch": "ng test",
     "lint": "eslint \"src/**/*.{ts,html}\"",
     "format": "prettier --write \"src/**/*.{ts,html,css}\"",
     "ci:format": "prettier --check \"src/**/*.{ts,html,css}\""
